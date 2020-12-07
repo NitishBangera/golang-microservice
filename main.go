@@ -10,10 +10,12 @@ import (
 )
 
 const (
-	topic          = "search"
-	brokerAddress1 = "172.16.2.31:9092"
-	brokerAddress2 = "172.16.2.32:9092"
+	topic = "search"
 )
+
+func getbrokers() []string {
+	return []string{"172.16.2.31:9092", "172.16.2.32:9092"}
+}
 
 func main() {
 	ctx := context.Background()
@@ -22,9 +24,9 @@ func main() {
 
 func consume(ctx context.Context) {
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:     []string{brokerAddress1, brokerAddress2},
+		Brokers:     getbrokers(),
 		Topic:       topic,
-		GroupID:     "golang-nitish",
+		GroupID:     "testgroup",
 		StartOffset: kafka.LastOffset,
 	})
 	for {
