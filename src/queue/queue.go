@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"microservice/src/model"
+	"microservice/src/worker"
 
 	"github.com/segmentio/kafka-go"
 )
@@ -14,6 +15,7 @@ type Queue struct {
 	context context.Context
 	reader  *kafka.Reader
 	writer  *kafka.Writer
+	handler *worker.Handler
 }
 
 // New method creates a Queue object.
@@ -29,7 +31,9 @@ func New(topic string, brokers []string, groupID string) *Queue {
 		Brokers: brokers,
 		Topic:   topic,
 	})
-	return &Queue{context: context.Background(), reader: reader, writer: writer}
+
+	handler := worker.New()
+	return &Queue{context: context.Background(), reader: reader, writer: writer, handler: handler}
 }
 
 // Consume method creates a reader from Kafka and reads the messages.
@@ -40,11 +44,11 @@ func (queue *Queue) Consume() {
 		if err != nil {
 			panic("Could not read message " + err.Error())
 		}
-		var eventNotif model.Eventnotification
-		if err := json.Unmarshal(msg.Value, &eventNotif); err != nil {
+		var eventNotification model.Eventnotification
+		if err := json.Unmarshal(msg.Value, &eventNotification); err != nil {
 			fmt.Println("Failed to unmarshal:", err)
 		} else {
-			fmt.Println("Received :", eventNotif)
+			queue.handler.Handle(eventNotification)
 		}
 	}
 }
