@@ -54,25 +54,27 @@ func (queue *Queue) Consume() {
 		if err != nil {
 			panic("Could not read message " + err.Error())
 		}
-		var eventNotification model.Eventnotification
-		if err := json.Unmarshal(msg.Value, &eventNotification); err != nil {
-			fmt.Println("Failed to unmarshal:", err)
-		} else {
-			if eventNotification.Event_data == nil {
-				val, err := queue.redisClient.Get(queue.context, eventNotification.Reference_id).Result()
-				if err != nil {
-					fmt.Println("Cannot read data for reference id from redis :", err, eventNotification)
-				} else {
-					var eventData map[string]interface{}
-					if err := json.Unmarshal([]byte(val), &eventData); err != nil {
-						fmt.Println("Failed to unmarshal redis data :", err)
+		go func(Value []byte) {
+			var eventNotification model.Eventnotification
+			if err := json.Unmarshal(Value, &eventNotification); err != nil {
+				fmt.Println("Failed to unmarshal:", err)
+			} else {
+				if eventNotification.Event_data == nil {
+					val, err := queue.redisClient.Get(queue.context, eventNotification.Reference_id).Result()
+					if err != nil {
+						fmt.Println("Cannot read data for reference id from redis :", err, eventNotification)
 					} else {
-						eventNotification.Event_data = eventData
+						var eventData map[string]interface{}
+						if err := json.Unmarshal([]byte(val), &eventData); err != nil {
+							fmt.Println("Failed to unmarshal redis data :", err)
+						} else {
+							eventNotification.Event_data = eventData
+						}
 					}
 				}
+				queue.handler.Handle(eventNotification)
 			}
-			queue.handler.Handle(eventNotification)
-		}
+		}(msg.Value)
 	}
 }
 
