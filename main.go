@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"kafka-consumer/model"
+	"kafka-consumer/src/model"
 
 	"github.com/segmentio/kafka-go"
 )
