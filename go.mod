@@ -1,4 +1,4 @@
-module kafka-consumer
+module microservice
 
 go 1.14
 
