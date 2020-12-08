@@ -1,13 +1,6 @@
 package main
 
-import (
-	"context"
-	"encoding/json"
-	"fmt"
-	"kafka-consumer/src/model"
-
-	"github.com/segmentio/kafka-go"
-)
+import "microservice/src/queue"
 
 const (
 	topic = "search"
@@ -18,28 +11,6 @@ func getbrokers() []string {
 }
 
 func main() {
-	ctx := context.Background()
-	consume(ctx)
-}
-
-func consume(ctx context.Context) {
-	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:     getbrokers(),
-		Topic:       topic,
-		GroupID:     "testgroup",
-		StartOffset: kafka.LastOffset,
-	})
-	for {
-		// the `ReadMessage` method blocks until we receive the next event
-		msg, err := r.ReadMessage(ctx)
-		if err != nil {
-			panic("Could not read message " + err.Error())
-		}
-		var eventNotif model.Eventnotification
-		if err := json.Unmarshal(msg.Value, &eventNotif); err != nil {
-			fmt.Println("failed to unmarshal:", err)
-		} else {
-			fmt.Println(eventNotif)
-		}
-	}
+	q := queue.New(topic, getbrokers(), "testgroup")
+	q.Consume()
 }
