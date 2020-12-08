@@ -18,7 +18,7 @@ type TestWorker struct {
 
 // GetEventType of TestWorker
 func (worker *TestWorker) GetEventType() string {
-	worker.eventType = "test"
+	worker.eventType = "new_audit_log"
 	return worker.eventType
 }
 

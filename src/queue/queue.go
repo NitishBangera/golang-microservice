@@ -33,6 +33,7 @@ func New(topic string, brokers []string, groupID string) *Queue {
 	})
 
 	handler := worker.New()
+	fmt.Println("Initializing listener")
 	return &Queue{context: context.Background(), reader: reader, writer: writer, handler: handler}
 }
 
