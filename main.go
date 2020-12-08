@@ -3,7 +3,8 @@ package main
 import "microservice/src/queue"
 
 const (
-	topic = "search"
+	topic     = "search"
+	redisAddr = "172.16.2.6:6379"
 )
 
 func getbrokers() []string {
@@ -11,6 +12,6 @@ func getbrokers() []string {
 }
 
 func main() {
-	q := queue.New(topic, getbrokers(), "testgroup")
+	q := queue.New(topic, getbrokers(), "testgroup", redisAddr)
 	q.Consume()
 }
