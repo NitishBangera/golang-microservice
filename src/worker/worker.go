@@ -13,11 +13,12 @@ type Worker interface {
 
 // TestWorker for work
 type TestWorker struct {
-	eventType string `default:"test"`
+	eventType string
 }
 
 // GetEventType of TestWorker
 func (worker *TestWorker) GetEventType() string {
+	worker.eventType = "test"
 	return worker.eventType
 }
 
