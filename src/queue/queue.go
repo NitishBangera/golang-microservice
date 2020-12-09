@@ -59,8 +59,8 @@ func (queue *Queue) Consume() {
 			if err := json.Unmarshal(Value, &eventNotification); err != nil {
 				fmt.Println("Failed to unmarshal:", err)
 			} else {
-				if eventNotification.Event_data == nil {
-					val, err := queue.redisClient.Get(queue.context, eventNotification.Reference_id).Result()
+				if eventNotification.EventData == nil {
+					val, err := queue.redisClient.Get(queue.context, eventNotification.ReferenceID).Result()
 					if err != nil {
 						fmt.Println("Cannot read data for reference id from redis :", err, eventNotification)
 					} else {
@@ -68,7 +68,7 @@ func (queue *Queue) Consume() {
 						if err := json.Unmarshal([]byte(val), &eventData); err != nil {
 							fmt.Println("Failed to unmarshal redis data :", err)
 						} else {
-							eventNotification.Event_data = eventData
+							eventNotification.EventData = eventData
 						}
 					}
 				}
@@ -80,7 +80,7 @@ func (queue *Queue) Consume() {
 
 // Produce method produces a message to kafka
 func (queue *Queue) Produce(eventNotification model.Eventnotification) {
-	eventData, err := json.Marshal(eventNotification.Event_data)
+	eventData, err := json.Marshal(eventNotification.EventData)
 	if err != nil {
 		fmt.Println("Failed to marshal event data :", err)
 	} else {
@@ -89,8 +89,8 @@ func (queue *Queue) Produce(eventNotification model.Eventnotification) {
 		if err != nil {
 			fmt.Println("Failed to set event data in redis :", err)
 		} else {
-			eventNotification.Reference_id = referenceID
-			eventNotification.Event_data = nil
+			eventNotification.ReferenceID = referenceID
+			eventNotification.EventData = nil
 		}
 	}
 	data, err := json.Marshal(eventNotification)
