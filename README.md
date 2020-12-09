@@ -7,5 +7,5 @@
 ## Docker Build
 ```sh
 $ docker build -t test .
-$ docker run -i -t test
+$ docker run -v /etc/config.ini:/etc/config.ini -i -t test
 ```
