@@ -6,7 +6,7 @@ type Config struct {
 }
 
 // New method creates a Handler object.
-func New(values map[string]string) *Config {
+func NewConfig(values map[string]string) *Config {
 	configs := make(map[string]string, len(values))
 
 	for k, v := range values {

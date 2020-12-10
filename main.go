@@ -32,7 +32,7 @@ func main() {
 		value := strings.Replace(strings.Replace(val.Value(), "[", "", -1), "]", "", -1)
 		values[val.Name()] = value
 	}
-	config = model.New(values)
+	config = model.NewConfig(values)
 
 	mqNodes := strings.Split(config.GetValue("MQ_NODES"), ",")
 	brokers := make([]string, len(mqNodes))
@@ -42,6 +42,6 @@ func main() {
 
 	redisNode := config.GetValue("REDIS_NODES") + ":" + redisPort
 
-	q := queue.New(topic, brokers, groupID, redisNode)
+	q := queue.NewQueue(topic, brokers, groupID, redisNode)
 	q.Consume()
 }

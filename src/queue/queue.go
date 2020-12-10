@@ -22,7 +22,7 @@ type Queue struct {
 }
 
 // New method creates a Queue object.
-func New(topic string, brokers []string, groupID string, redisAddress string) *Queue {
+func NewQueue(topic string, brokers []string, groupID string, redisAddress string) *Queue {
 	fmt.Println("Initializing listener")
 	reader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:     brokers,
@@ -36,7 +36,7 @@ func New(topic string, brokers []string, groupID string, redisAddress string) *Q
 		Topic:   topic,
 	})
 
-	handler := worker.New()
+	handler := worker.NewHandler()
 
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     redisAddress,

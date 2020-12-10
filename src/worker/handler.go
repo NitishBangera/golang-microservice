@@ -11,7 +11,7 @@ type Handler struct {
 }
 
 // New method creates a Handler object.
-func New() *Handler {
+func NewHandler() *Handler {
 	workers := make(map[string]Worker)
 	testWorker := new(TestWorker)
 	workers[testWorker.GetEventType()] = testWorker
