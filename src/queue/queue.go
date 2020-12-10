@@ -31,10 +31,7 @@ func NewQueue(topic string, brokers []string, groupID string, redisAddress strin
 		StartOffset: kafka.LastOffset,
 	})
 
-	writer := kafka.NewWriter(kafka.WriterConfig{
-		Brokers: brokers,
-		Topic:   topic,
-	})
+	writer := &kafka.Writer{Addr: kafka.TCP(brokers...), Topic: topic}
 
 	handler := worker.NewHandler()
 
