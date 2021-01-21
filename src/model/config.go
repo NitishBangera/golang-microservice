@@ -5,7 +5,7 @@ type Config struct {
 	values map[string]string
 }
 
-// New method creates a Handler object.
+// NewConfig New method creates a Handler object.
 func NewConfig(values map[string]string) *Config {
 	configs := make(map[string]string, len(values))
 
@@ -15,6 +15,7 @@ func NewConfig(values map[string]string) *Config {
 	return &Config{values: configs}
 }
 
+// GetValue Gets value of the key from the config.
 func (config Config) GetValue(key string) string {
 	return config.values[key]
 }

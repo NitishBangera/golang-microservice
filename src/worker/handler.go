@@ -10,7 +10,7 @@ type Handler struct {
 	workers map[string]Worker
 }
 
-// New method creates a Handler object.
+// NewHandler New method creates a Handler object.
 func NewHandler() *Handler {
 	workers := make(map[string]Worker)
 	testWorker := new(TestWorker)
